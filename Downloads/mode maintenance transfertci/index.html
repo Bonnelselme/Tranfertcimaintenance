@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransferCI - Maintenance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            height: 100vh;
+            overflow: hidden;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            position: relative;
+        }
+
+        /* Vidéo de fond */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        .video-background video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Overlay glacé */
+        .ice-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 70%, rgba(0, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 30%, rgba(173, 216, 230, 0.1) 0%, transparent 50%),
+                        linear-gradient(45deg, rgba(255, 255, 255, 0.05) 0%, transparent 100%);
+            z-index: -1;
+            animation: iceShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes iceShimmer {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+
+        /* Particules de neige */
+        .snowflakes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1em;
+            animation-name: snowfall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+
+        @keyframes snowfall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Container principal */
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Logo animé */
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b35, #ff8c42, #ffa500);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 2rem;
+            animation: logoGlow 3s ease-in-out infinite, textShine 4s linear infinite;
+            text-shadow: 0 0 30px rgba(255, 165, 0, 0.5);
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { 
+                filter: drop-shadow(0 0 10px rgba(255, 165, 0, 0.8));
+                transform: scale(1);
+            }
+            50% { 
+                filter: drop-shadow(0 0 20px rgba(255, 140, 66, 1));
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes textShine {
+            0% { background-position: -300% 0; }
+            100% { background-position: 300% 0; }
+        }
+
+        /* Titre principal */
+        .title {
+            font-size: 3rem;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Message */
+        .message {
+            font-size: 1.5rem;
+            color: #b0e0e6;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            line-height: 1.6;
+            text-shadow: 0 0 10px rgba(176, 224, 230, 0.5);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading bar */
+        .loading-container {
+            width: 400px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            margin: 2rem 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.3);
+        }
+
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #00ffff, #ffffff, #87ceeb);
+            border-radius: 10px;
+            animation: loading 3s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 70%; }
+            100% { width: 100%; }
+        }
+
+        /* Cristaux de glace flottants */
+        .crystal {
+            position: absolute;
+            color: rgba(0, 255, 255, 0.6);
+            font-size: 2rem;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .crystal:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+        .crystal:nth-child(2) { top: 20%; right: 15%; animation-delay: 1s; }
+        .crystal:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 2s; }
+        .crystal:nth-child(4) { bottom: 15%; right: 10%; animation-delay: 3s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-20px) rotate(180deg);
+                opacity: 1;
+            }
+        }
+
+        /* Effet de givre sur les bords */
+        .frost-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at top left, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at top right, rgba(173, 216, 230, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at bottom left, rgba(0, 255, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.1) 0%, transparent 20%);
+            z-index: 3;
+        }
+
+        /* Animation du temps */
+        .countdown {
+            font-size: 1.2rem;
+            color: #00ffff;
+            margin-top: 2rem;
+            text-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+            animation: countdownPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes countdownPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .logo { font-size: 2.5rem; }
+            .title { font-size: 2rem; }
+            .message { font-size: 1.2rem; padding: 0 20px; }
+            .loading-container { width: 300px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Vidéo de fond -->
+    <div class="video-background">
+        <video autoplay muted loop>
+            <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAAAIZnJlZQAABW1tZGF0AAACsgYF//+q3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDEyNSByMjE5MWZlIC0gSC4yNjQvTVBFRy00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAxNCAtIGh0dHA6Ly93d3cudmlkZW9sYW4ub3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFseXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVkX3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBkZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTYgbG9va2FoZWFkX3RocmVhZHM9MSBzbGljZWRfdGhyZWFkcz0wIG5yPTAgZGVjaW1hdGU9MSBpbnRlcmxhY2VkPTAgYmx1cmF5X2NvbXBhdD0wIGNvbnN0cmFpbmVkX2ludHJhPTAgYmZyYW1lcz0zIGJfcHlyYW1pZD0yIGJfYWRhcHQ9MSBiX2JpYXM9MCBkaXJlY3Q9MSB3ZWlnaHRiPTEgb3Blbl9nb3A9MCB3ZWlnaHRwPTIga2V5aW50PTI1MCBrZXlpbnRfbWluPTEwIHNjZW5lY3V0PTQwIGludHJhX3JlZnJlc2g9MCByY19sb29rYWhlYWQ9NDAgcmM9Y3JmIG1idHJlZT0xIGNyZj0yMy4wIHFjb21wPTAuNjAgcXBtaW49MCBxcG1heD02OSBxcHN0ZXA9NCBpcF9yYXRpbz0xLjQwIGFxPTE6MS4wMACAAAAAFWWIhAA3//728P4FNjuZQQAAAu5tb292AAAAbG12aGQAAAAAAAAAAAAAAAAAAAPoAAAALwABAAABAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAACGHRyYWsAAABcdGtoZAAAAAMAAAAAAAAAAAAAAAEAAAAAAAAALwAAAAAAAAAAAAAAAQEAAAAAAQAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAACRlZHRzAAAAHGVsc3QAAAAAAAAAAQAAAC8AAAAAAAEAAAAAAZttZGlhAAAAIG1kaGQAAAAAAAAAAAAAAAAAAKxEAAAIAFXEAAAAAAAtaGRscgAAAAAAAAAAdmlkZQAAAAAAAAAAAAAAAFZpZGVvSGFuZGxlcgAAAAFYbWluZgAAABR2bWhkAAAAAQAAAAAAAAAAAAAAJGRpbmYAAAAcZHJlZgAAAAAAAAABAAAADHVybCAAAAABAAABGHN0YmwAAACYc3RzZAAAAAAAAAABAAAAiGF2YzEAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGAAYAABIAAAASAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGP//AAAALWF2Y0MBQsAN/+EAGGdCwA3949QgQgAAAwABAAADAPA8YMZYAQAGaOvjyyLA/fj4AAAAABNjb2xybmNscAAAQAABAAEAAAAAEHBhc3AAAAABAAAAAQAAABhzdHRzAAAAAAAAAAEAAAABAAAAAgAAABRzdHNzAAAAAAAAAAEAAAABAAABIGN0dHMAAAAAAAAAAgAAAAAAAAABAAAAAgAAAAAAAAABAAAAARRzdHNjAAAAAAAAAAEAAAABAAAAAwAAAAEAAAAcc3RzegAAAAAAAAAAAAADAAAAFAAAAA4AAAAOAAAAFHN0Y28AAAAAAAAAAQAAADAAAABidWR0YQAAAFptZXRhAAAAAAAAACFoZGxyAAAAAAAAAABtZGlyYXBwbAAAAAAAAAAAAAAAAC1pbHN0AAAAJal9dG9vAAAAHWRhdGEAAAABAAAAAExhdmY1Ni4yNS4xMDA=" type="video/mp4">
+        </video>
+    </div>
+
+    <!-- Overlay glacé -->
+    <div class="ice-overlay"></div>
+
+    <!-- Particules de neige -->
+    <div class="snowflakes" id="snowflakes"></div>
+
+    <!-- Cristaux flottants -->
+    <div class="crystal">❄</div>
+    <div class="crystal">❅</div>
+    <div class="crystal">❄</div>
+    <div class="crystal">❅</div>
+
+    <!-- Effet de givre -->
+    <div class="frost-effect"></div>
+
+    <!-- Contenu principal -->
+    <div class="container">
+        <div class="logo">TransferCI</div>
+        
+        <h1 class="title">Nous sommes désolés</h1>
+        
+        <div class="message">
+            Nous sommes actuellement en maintenance en raison de mises à jour importantes 
+            que nous mettons au point pour vous offrir le meilleur service possible. 
+            Le site sera disponible dès demain.
+        </div>
+        
+        <div class="loading-container">
+            <div class="loading-bar"></div>
+        </div>
+        
+        <div class="countdown" id="countdown">
+            Retour estimé dans : <span id="time">--:--:--</span>
+        </div>
+    </div>
+
+    <script>
+        // Génération des flocons de neige
+        function createSnowflakes() {
+            const snowflakesContainer = document.getElementById('snowflakes');
+            const snowflakeSymbols = ['❄', '❅', '❆', '✦', '✧', '✩'];
+            
+            for (let i = 0; i < 50; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+                
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
+                snowflake.style.animationDelay = Math.random() * 2 + 's';
+                snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+                snowflake.style.opacity = Math.random();
+                
+                snowflakesContainer.appendChild(snowflake);
+            }
+        }
+
+        // Compte à rebours fixe à 24h
+        function updateCountdown() {
+            const timeLeft = 24 * 60 * 60 * 1000; // 24 heures en millisecondes
+            
+            const hours = 24;
+            const minutes = 0;
+            const seconds = 0;
+            
+            // Animation du compte à rebours (simulation)
+            const now = Date.now();
+            const elapsed = (now % (24 * 60 * 60 * 1000)) / 1000; // Secondes écoulées dans la journée
+            const remaining = 24 * 60 * 60 - elapsed; // Secondes restantes
+            
+            const displayHours = Math.floor(remaining / 3600);
+            const displayMinutes = Math.floor((remaining % 3600) / 60);
+            const displaySeconds = Math.floor(remaining % 60);
+            
+            document.getElementById('time').textContent = 
+                String(displayHours).padStart(2, '0') + ':' + 
+                String(displayMinutes).padStart(2, '0') + ':' + 
+                String(displaySeconds).padStart(2, '0');
+        }
+
+        // Effet de souris avec particules lumineuses
+        function createGlowEffect(e) {
+            const glow = document.createElement('div');
+            glow.style.position = 'fixed';
+            glow.style.left = e.clientX - 5 + 'px';
+            glow.style.top = e.clientY - 5 + 'px';
+            glow.style.width = '10px';
+            glow.style.height = '10px';
+            glow.style.background = 'radial-gradient(circle, rgba(0, 255, 255, 0.8) 0%, transparent 70%)';
+            glow.style.borderRadius = '50%';
+            glow.style.pointerEvents = 'none';
+            glow.style.zIndex = '1000';
+            glow.style.animation = 'fadeOut 1s ease-out forwards';
+            
+            document.body.appendChild(glow);
+            
+            setTimeout(() => {
+                document.body.removeChild(glow);
+            }, 1000);
+        }
+
+        // Style pour l'animation fadeOut
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                0% { opacity: 1; transform: scale(1); }
+                100% { opacity: 0; transform: scale(3); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Animation du background vidéo (simulé avec canvas)
+        function createVideoBackground() {
+            const video = document.querySelector('video');
+            if (video) {
+                // Créer une animation de particules bleues en mouvement
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                canvas.style.position = 'fixed';
+                canvas.style.top = '0';
+                canvas.style.left = '0';
+                canvas.style.zIndex = '-2';
+                canvas.style.opacity = '0.3';
+                
+                document.body.insertBefore(canvas, document.body.firstChild);
+                
+                const particles = [];
+                for (let i = 0; i < 30; i++) {
+                    particles.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: (Math.random() - 0.5) * 2,
+                        size: Math.random() * 3 + 1
+                    });
+                }
+                
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    particles.forEach(particle => {
+                        particle.x += particle.vx;
+                        particle.y += particle.vy;
+                        
+                        if (particle.x < 0 || particle.x > canvas.width) particle.vx *= -1;
+                        if (particle.y < 0 || particle.y > canvas.height) particle.vy *= -1;
+                        
+                        const gradient = ctx.createRadialGradient(
+                            particle.x, particle.y, 0,
+                            particle.x, particle.y, particle.size * 10
+                        );
+                        gradient.addColorStop(0, 'rgba(0, 255, 255, 0.3)');
+                        gradient.addColorStop(1, 'rgba(0, 255, 255, 0)');
+                        
+                        ctx.fillStyle = gradient;
+                        ctx.beginPath();
+                        ctx.arc(particle.x, particle.y, particle.size * 10, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            createSnowflakes();
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            createVideoBackground();
+            
+            // Effet de souris
+            document.addEventListener('mousemove', createGlowEffect);
+        });
+    </script>
+</body>
+</html>
